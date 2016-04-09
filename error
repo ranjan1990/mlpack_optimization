@@ -1,0 +1,85 @@
+For my research purpose I am  as using sgd to fit a function. 
+There is no  segmentation fault if   number of function  is less( about 15) 
+But when I tried  with number of function >=15 it got segmentation fault. 
+I thought may be memory allocation of visitationOrder  array created a problem but it is not the case. 
+But the error is different. please see the debug error  
+
+
+
+
+
+
+------------------------------------GDB------------------------------------------------------
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000040b2d8 in mlpack::optimization::SGD<MyFunction>::Optimize (this=0x7fffffffdce0, iterate=...)
+    at /usr/local/include/mlpack/core/optimizers/sgd/sgd_impl.hpp:120
+120 }
+(gdb) backtrance
+Undefined command: "backtrance".  Try "help".
+(gdb) backtrace 
+#0  0x000000000040b2d8 in mlpack::optimization::SGD<MyFunction>::Optimize (this=0x7fffffffdce0, iterate=...)
+    at /usr/local/include/mlpack/core/optimizers/sgd/sgd_impl.hpp:120
+#1  0x8000000000c4a210 in ?? ()
+#2  0x0000000000000001 in ?? ()
+#3  0x3ec92a737110e454 in ?? ()
+#4  0x00007ffff7ffe1c8 in _r_debug ()
+#5  0x00007ffff7de4991 in _dl_lookup_symbol_x (
+    undef_name=<error reading variable: Cannot access memory at address 0x80015129def58a06>, 
+    undef_name@entry=<error reading variable: Cannot access memory at address 0x80015129def58ab6>, undef_map=0x0, 
+    ref=0x8000fc9c53f95812, 
+    symbol_scope=<error reading variable: Cannot access memory at address 0x80015129def589e6>, 
+    version=0x8000000000000000, type_class=-8224, 
+    flags=<error reading variable: Cannot access memory at address 0x80015129def58abe>, 
+    skip_map=<error reading variable: Cannot access memory at address 0x80015129def58ac6>) at dl-lookup.c:737
+(gdb) frame 2
+#2  0x0000000000000001 in ?? ()
+(gdb) list
+115   for (size_t i = 0; i < numFunctions; ++i)
+116     overallObjective += function.Evaluate(iterate, i);
+117   Log::Warn << "*DBG2 " <<overallObjective << "; terminating"<< std::endl;
+118   
+119   return overallObjective;
+120 }
+121 
+122 } // namespace optimization
+123 } // namespace mlpack
+124 
+(gdb) frame 3
+#3  0x3ec92a737110e454 in ?? ()
+(gdb) list
+125 #endif
+(gdb) frame 4
+#4  0x00007ffff7ffe1c8 in _r_debug ()
+(gdb) list
+Line number 126 out of range; /usr/local/include/mlpack/core/optimizers/sgd/sgd_impl.hpp has 125 lines.
+(gdb) 
+
+
+
+
+--------------------------------------------valgrind-----------------------------------
+
+==30619== Jump to the invalid address stated on the next line
+==30619==    at 0x8000000000C4A210: ???
+==30619==  Address 0x8000000000c4a210 is not stack'd, malloc'd or (recently) free'd
+==30619== 
+==30619== 
+==30619== Process terminating with default action of signal 11 (SIGSEGV)
+==30619==  Bad permissions for mapped region at address 0x8000000000C4A210
+==30619==    at 0x8000000000C4A210: ???
+==30619== 
+==30619== HEAP SUMMARY:
+==30619==     in use at exit: 18,314 bytes in 159 blocks
+==30619==   total heap usage: 6,922 allocs, 6,763 frees, 1,661,692 bytes allocated
+==30619== 
+==30619== LEAK SUMMARY:
+==30619==    definitely lost: 0 bytes in 0 blocks
+==30619==    indirectly lost: 0 bytes in 0 blocks
+==30619==      possibly lost: 1,425 bytes in 35 blocks
+==30619==    still reachable: 16,889 bytes in 124 blocks
+==30619==         suppressed: 0 bytes in 0 blocks
+==30619== Rerun with --leak-check=full to see details of leaked memory
+==30619== 
+==30619== For counts of detected and suppressed errors, rerun with: -v
+==30619== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault
