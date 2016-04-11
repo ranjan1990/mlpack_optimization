@@ -63,8 +63,15 @@ void MyFunction::Gradient(const arma::mat& coordinates, const size_t i, arma::ma
 
       }
       val=val+ coordinates[3] ; 
+  if(i==3)
+  {
+  gradient[i]=2*val;
+  }
+  else
+  {
+    gradient[i]=2*val*Ri[i];
+  }
 
-  gradient[i]=2*val*Ri[i];
 
 }
 
