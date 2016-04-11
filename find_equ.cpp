@@ -25,7 +25,7 @@ class MyFunction
         cout<<" "<<data1.n_cols<<"   "<<data1.n_rows<<endl;
        }
 
-       size_t NumFunctions() const { return 20; }
+       size_t NumFunctions() const { return 55; }
        arma::mat GetInitialPoint() const { return arma::mat("0.555;0.2203;-0.5269;6.1637"); }
        double Evaluate(const arma::mat& coordinates, const size_t i) const ;
        void Gradient(const arma::mat& coordinates,const size_t i,arma::mat& gradient) const ;
@@ -37,6 +37,7 @@ class MyFunction
 
 double MyFunction::Evaluate(const arma::mat& coordinates, const size_t i) const
 {
+  
       arma::mat Ri=data1.col(i);
 
       //Ri.insert_rows(3,1);
@@ -50,11 +51,13 @@ double MyFunction::Evaluate(const arma::mat& coordinates, const size_t i) const
       val=val+ coordinates[3] ; 
 
       return(val*val);
+      
 }
 
 void MyFunction::Gradient(const arma::mat& coordinates, const size_t i, arma::mat& gradient) const
 {
   gradient.zeros(4);
+  
   arma::mat Ri=data1.col(i);
       double val=0;
       for(size_t j=0;j<3;j++)
